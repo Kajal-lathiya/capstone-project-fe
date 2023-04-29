@@ -6,6 +6,8 @@ import searchReducer from "../reducers";
 import productReducer from "../reducers/productReducer";
 import cartReducer from "../reducers/cartReducer";
 import checkoutReducer from "../reducers/checkoutReducer";
+import userReducer from "../reducers/userReducer";
+
 const persistConfig = {
   key: "root",
   storage: localStorage
@@ -17,6 +19,7 @@ const persistConfig = {
 };
 
 const bigReducer = combineReducers({
+  user: userReducer,
   search: searchReducer,
   product: productReducer,
   cart: cartReducer,

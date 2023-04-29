@@ -1,5 +1,5 @@
 import React from "react";
-import logoPicture from "../assets/bn_bookstore_logo.png";
+// import logoPicture from "../assets/bn_bookstore_logo.png";
 import styles from "./NavBar.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
