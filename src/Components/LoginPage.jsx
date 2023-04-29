@@ -15,8 +15,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Container from "@mui/material/Container";
-
-// import { userLogin } from "../redux/reducers/auth/userAuthActions";
+import { LOGIN_ACTION, GET_PROFILE_ACTION } from "../redux/actions/userAction";
 
 const theme = createTheme();
 
@@ -32,8 +31,13 @@ const LoginPage = () => {
       email: email,
       password: password
     };
-    // dispatch(userLogin(user));
-    navigate("/");
+    dispatch(LOGIN_ACTION(user))
+      .then((response) => {
+        console.log("response", response);
+        dispatch(GET_PROFILE_ACTION());
+        navigate("/");
+      })
+      .catch((err) => console.log(err));
   };
 
   return (

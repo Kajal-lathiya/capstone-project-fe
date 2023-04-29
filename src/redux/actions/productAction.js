@@ -5,7 +5,6 @@ export function PRODUCT_ACTION() {
   return function (dispatch, getState) {
     return new Promise(async (resolve, rejects) => {
       try {
-        // let userToken = await AsyncStorage.getItem("USER_TOKEN");
         dispatch({
           type: "GET_PRODUCT",
           subtype: "loading"

@@ -11,32 +11,44 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { MenuItem } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-// import { registerUser } from "../redux/reducers/auth/userAuthActions";
+import { SIGNUP_ACTION, GET_PROFILE_ACTION } from "../redux/actions/userAction";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 const theme = createTheme();
 
 const RegisterPage = () => {
+  const roles = ["user", "admin"];
+
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
+
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const user = {
-      name: name,
-      surname: surname,
+      lastName: surname,
+      firstName: name,
       email: email,
       password: password,
+      role: role
     };
     console.log(name, email, surname, password);
-    // dispatch(registerUser(user));
-    navigate("/login");
+    dispatch(SIGNUP_ACTION(user))
+      .then((response) => {
+        console.log("response", response);
+        dispatch(GET_PROFILE_ACTION());
+
+        navigate("/");
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -48,7 +60,7 @@ const RegisterPage = () => {
             marginTop: 8,
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
+            alignItems: "center"
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
@@ -118,6 +130,34 @@ const RegisterPage = () => {
                   }}
                 />
               </Grid>
+              <Grid
+                item
+                xs={12}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  width: "80%"
+                }}
+              >
+                <TextField
+                  select
+                  label="Select role"
+                  variant="filled"
+                  value={role}
+                  onChange={(e) => {
+                    setRole(e.target.value);
+                  }}
+                >
+                  {" "}
+                  {roles.map((role) => (
+                    <MenuItem key={role} value={role}>
+                      {role}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+
               <Grid item xs={12}>
                 <FormControlLabel
                   control={

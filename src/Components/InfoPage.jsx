@@ -3,10 +3,12 @@ import { Box } from "@mui/system";
 // import graphic from "../assets/undraw_Dreamer_re_9tua.png";
 import graphic from "../assets/undraw_dream.jpg";
 import styles from "./Home.module.css";
+import MyNavbar from "./MyNavbar";
 
 const InfoPage = () => {
   return (
     <>
+      <MyNavbar />
       <Grid container sx={{ padding: "2rem" }}>
         <Grid item xs={12}>
           <div

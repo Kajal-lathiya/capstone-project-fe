@@ -9,7 +9,6 @@ import styles from "./PageSwitch.module.css";
 function PageSwitch(props) {
   const [currentPage, setCurrentPage] = useState(props.currentPage);
 
-  // let { url } = useMatch();
   function increasePageNumber() {
     if (currentPage <= props.totalPages) {
       setCurrentPage(currentPage + 1);

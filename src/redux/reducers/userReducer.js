@@ -22,18 +22,18 @@ export default function user(state = initialState, action = {}) {
           action.subtype === "success" ? action.loginData : state.loginData
       };
     }
-    // case "ADDTO_CART": {
-    //   return {
-    //     ...state,
-    //     addtocartError: action.error ? action.error : null,
-    //     addtocartSuccess: action.subtype === "success",
-    //     addtocartLoading: action.subtype === "loading",
-    //     addtocartData:
-    //       action.subtype === "success"
-    //         ? action.addtocartData
-    //         : state.addtocartData
-    //   };
-    // }
+    case "GET_PROFILE": {
+      return {
+        ...state,
+        currentUserError: action.error ? action.error : null,
+        currentUserSuccess: action.subtype === "success",
+        currentUserLoading: action.subtype === "loading",
+        currentUser:
+          action.subtype === "success"
+            ? action.currentUser
+            : state.currentUser
+      };
+    }
 
     default:
       return state;

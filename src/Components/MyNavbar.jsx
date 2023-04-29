@@ -3,7 +3,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { AllInclusive } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 // import { authActions } from "../redux/reducers/auth/userAuthSlice";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { GET_PROFILE_ACTION } from "../redux/actions/userAction";
+
 // import { productActions } from "../redux/reducers/products/productsSlice";
 import {
   Badge,
@@ -17,9 +19,9 @@ import {
   Box,
   Toolbar,
   Menu,
-  Container,
+  Container
 } from "@mui/material";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import classes from "./MyNavbar.module.css";
 
 // import { messagesActions } from "../redux/reducers/messages/messagesSlice";
@@ -27,17 +29,18 @@ import classes from "./MyNavbar.module.css";
 const navItemStyle = {
   "&:hover": {
     backgroundColor: "transparent",
-    textShadow: "1px 1px 5px rgba(255, 255, 255, 0.5);",
-  },
+    textShadow: "1px 1px 5px rgba(255, 255, 255, 0.5);"
+  }
 };
 
 function MyNavbar() {
-  // const currentUser = useSelector((state) => state.auth.userInfo);
-  const currentUser = ''
+  const currentUser = useSelector((state) => state.user.currentUser);
+  // const cartCount = useSelector((state) => state.cart.cartData.length);
+  const cartCount = 2;
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const handleOpenMessages = () => {
     // dispatch(messagesActions.openMessageList());
   };
@@ -58,13 +61,20 @@ function MyNavbar() {
   };
 
   const handleLogout = () => {
-    // dispatch(authActions.logout());
-    // dispatch(productActions.removeProductImage());
-    // dispatch(messagesActions.setActiveChat({}));
-    // dispatch(messagesActions.closeMessageBox());
-    // dispatch(messagesActions.closeMessageList());
+    console.log("handleLogout");
+    let clear = localStorage.clear();
+    let userToken = localStorage.getItem("USER_TOKEN");
+    let userId = localStorage.getItem("CURRENT_USER");
+    dispatch(GET_PROFILE_ACTION());
+    console.log("clear-->", userToken, userId);
+    navigate("/login");
   };
 
+  const navigateCart = () => {
+    // if (cartCount > 0) {
+    //   navigate("/cart");
+    // }
+  };
   return (
     <AppBar
       className={classes.navbar}
@@ -75,14 +85,14 @@ function MyNavbar() {
         <Toolbar disableGutters>
           <Link to="/">
             <div className={classes.logoContainer}>
-            <img
-              src={
-                "https://tse3.mm.bing.net/th?id=OIP.OCUP9yojSLsGZPJz9aGNsAHaCR&pid=Api&P=0"
-              }
-              alt="Onlline Marketplace"
-              className={classes.logoSize}
-            />
-          </div>
+              <img
+                src={
+                  "https://tse3.mm.bing.net/th?id=OIP.OCUP9yojSLsGZPJz9aGNsAHaCR&pid=Api&P=0"
+                }
+                alt="Onlline Marketplace"
+                className={classes.logoSize}
+              />
+            </div>
           </Link>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -103,17 +113,17 @@ function MyNavbar() {
               disableScrollLock={true}
               anchorOrigin={{
                 vertical: "bottom",
-                horizontal: "left",
+                horizontal: "left"
               }}
               keepMounted
               transformOrigin={{
                 vertical: "top",
-                horizontal: "left",
+                horizontal: "left"
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: "block", md: "none" },
+                display: { xs: "block", md: "none" }
               }}
             >
               <MenuItem onClick={handleCloseNavMenu}>
@@ -136,7 +146,7 @@ function MyNavbar() {
                   <Typography textAlign="center">Products</Typography>
                 </NavLink>
               </MenuItem>
-              <MenuItem onClick={handleCloseNavMenu}>
+              {/* <MenuItem onClick={handleCloseNavMenu}>
                 <NavLink
                   to="/community"
                   className={({ isActive }) =>
@@ -146,7 +156,7 @@ function MyNavbar() {
                   {" "}
                   <Typography textAlign="center">Community</Typography>
                 </NavLink>
-              </MenuItem>
+              </MenuItem> */}
               <MenuItem onClick={handleCloseNavMenu}>
                 <NavLink
                   to="/Contact"
@@ -171,7 +181,7 @@ function MyNavbar() {
               </MenuItem>
             </Menu>
           </Box>
-         
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <MenuItem
               onClick={handleCloseNavMenu}
@@ -203,7 +213,7 @@ function MyNavbar() {
                 <Typography textAlign="center">Products</Typography>
               </NavLink>
             </MenuItem>
-            <MenuItem
+            {/* <MenuItem
               onClick={handleCloseNavMenu}
               disableRipple={true}
               disableTouchRipple={true}
@@ -218,7 +228,7 @@ function MyNavbar() {
                 {" "}
                 <Typography textAlign="center">Community</Typography>
               </NavLink>
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem
               onClick={handleCloseNavMenu}
               disableRipple={true}
@@ -254,23 +264,30 @@ function MyNavbar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            {currentUser && currentUser ? (
+            {currentUser && currentUser.user ? (
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <IconButton
-                  className="notificationsIcon"
-                  onClick={handleOpenMessages}
-                >
-                  <Badge badgeContent={0} color="primary">
-                    <MailOutlineIcon />
-                  </Badge>
-                </IconButton>
+                <div onClick={navigateCart}>
+                  <i
+                    className={`pi pi-shopping-cart p-overlay-badge ${classes.cartIcon}`}
+                    style={{ fontSize: "2rem" }}
+                  >
+                    {/* {cartCount > 0 ? ( */}
+                    <Badge
+                      value={cartCount}
+                      className={classes.badgeContent}
+                    ></Badge>
+                    {/* ) : (
+                      ""
+                    )} */}
+                  </i>
+                </div>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, ml: 1 }}>
                     <Avatar
                       alt=""
-                      src={currentUser?.avatar}
+                      src={currentUser.user.avatar}
                       sx={{
-                        border: "0.1px solid grey",
+                        border: "0.1px solid grey"
                       }}
                     />
                   </IconButton>
@@ -295,13 +312,13 @@ function MyNavbar() {
               anchorEl={anchorElUser}
               anchorOrigin={{
                 vertical: "top",
-                horizontal: "right",
+                horizontal: "right"
               }}
               disableScrollLock
               keepMounted
               transformOrigin={{
                 vertical: "top",
-                horizontal: "right",
+                horizontal: "right"
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
