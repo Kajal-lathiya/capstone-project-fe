@@ -2,6 +2,7 @@ import React from "react";
 import logoPicture from "../assets/bn_bookstore_logo.png";
 import styles from "./NavBar.module.css";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 // import { useDispatch, useSelector } from "react-redux";
 import { userSignOut } from "../features/orderBooks/userSlice";
@@ -13,10 +14,9 @@ import { SplitButton } from "primereact/splitbutton";
 
 function NavBar() {
   // const dispatch = useDispatch();
-  let cartCount = 2;
-  // let cartCount = useSelector((state) => state.orderBooks.orderBooks.length);
   // let isSignIn = useSelector((state) => state.userManagement.isSignIn);
   let isSignIn = false;
+  const cartCount = useSelector((state) => state.cart.cartData);
 
   let navigate = useNavigate();
 
@@ -35,9 +35,9 @@ function NavBar() {
   // ];
 
   function navigateCart() {
-    if (cartCount > 0) {
-      navigate("/cart");
-    }
+    // if (cartCount > 0) {
+    //   navigate("/cart");
+    // }
   }
 
   const userSplitButton = (
@@ -74,19 +74,24 @@ function NavBar() {
       <div className={styles.innerContainer}>
         <div className={styles.navbarContainer}>
           <div className={styles.logoContainer}>
-            <img src={logoPicture} alt="BN Bookstore Logo" />
+            <img
+              src={
+                "https://tse3.mm.bing.net/th?id=OIP.OCUP9yojSLsGZPJz9aGNsAHaCR&pid=Api&P=0"
+              }
+              alt="Onlline Marketplace"
+              className={styles.logoSize}
+            />
           </div>
           <div className={styles.menuContainer}>
             <div className={styles.menu}>
               <Link to="/" className={`${styles.menuText} ${styles.menuItem}`}>
                 <div className={styles.menuItem}>Home</div>
               </Link>
-
               <Link
                 to="/bookstore/page"
                 className={`${styles.menuText} ${styles.menuItem}`}
               >
-                <div className={styles.menuItem}>Bookstore</div>
+                <div className={styles.menuItem}>Products</div>
               </Link>
 
               <Link
@@ -105,7 +110,7 @@ function NavBar() {
               className={`pi pi-shopping-cart p-overlay-badge ${styles.cartIcon}`}
               style={{ fontSize: "2rem" }}
             >
-              {cartCount > 0 ? (
+              {cartCount && cartCount > 0 ? (
                 <Badge
                   value={cartCount}
                   className={styles.badgeContent}

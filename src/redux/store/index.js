@@ -3,7 +3,9 @@ import localStorage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 // import { encryptTransform } from "redux-persist-transform-encrypt";
 import searchReducer from "../reducers";
-
+import productReducer from "../reducers/productReducer";
+import cartReducer from "../reducers/cartReducer";
+import checkoutReducer from "../reducers/checkoutReducer";
 const persistConfig = {
   key: "root",
   storage: localStorage
@@ -15,7 +17,10 @@ const persistConfig = {
 };
 
 const bigReducer = combineReducers({
-  search: searchReducer
+  search: searchReducer,
+  product: productReducer,
+  cart: cartReducer,
+  checkout: checkoutReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, bigReducer);

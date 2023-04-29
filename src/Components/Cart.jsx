@@ -1,39 +1,68 @@
-import React from "react";
-
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import CartItem from "./CartItem";
 import Order from "./Order";
+import { OrderList } from "primereact/orderlist";
 
 import styles from "./Cart.module.css";
+import { CARTITEMS_ACTION } from "../redux/actions/cartAction";
 
 function Cart() {
-  const books = useSelector((state) => state.orderBooks.orderBooks);
+  const dispatch = useDispatch();
+  const loader = useSelector((state) => state.cart.cartItemsLoading);
+  const cartItemsArray = useSelector((state) => state.cart.cartData);
+  const [totalMoney, setTotalMoney] = useState(0);
+  useEffect(() => {
+    dispatch(CARTITEMS_ACTION())
+      .then((res) => {
+        console.log("res", res);
+        let total = 0;
+        for (let orderProduct of res) {
+          total =
+            total +
+            parseInt(orderProduct.quantity) *
+              parseFloat(orderProduct.productID.price);
+        }
+        console.log("total::", total);
+        setTotalMoney(total);
+      })
+      .catch((err) => console.log("err", err));
+  }, []);
+
+  const itemTemplate = (item) => {
+    return (
+      <CartItem
+        key={item._id}
+        cartItemID={item._id}
+        productId={item.productID._id}
+        title={item.productID.title}
+        imgSrc={item.productID.thumbnail}
+        author={item.productID.brand}
+        price={item.productID.price}
+        orderQuantity={item.quantity}
+      />
+    );
+  };
+
   return (
     <div className={styles.outerContainer}>
-      <div className={styles.innerContainer}>
-        <div>
-          <h1>Cart Information</h1>
-        </div>
-        <div className={styles.cartInformation}>
-          <div className={styles.cartBooks}>
-            {books.map((book) => (
-              <CartItem
-                key={book.id}
-                id={book.id}
-                title={book.title}
-                imgSrc={book.imgSrc}
-                author={book.author}
-                price={book.price}
-                orderQuantity={book.orderQuantity}
-              />
-            ))}
+      {!loader && (
+        <div className={styles.innerContainer}>
+          <div>
+            <h1>Cart Information</h1>
           </div>
-          <div className={styles.cartTotal}>
-            <Order books={books} />
+          <div className={styles.cartInformation}>
+            <div className={styles.cartBooks}>
+              <OrderList
+                value={cartItemsArray}
+                itemTemplate={itemTemplate}
+              ></OrderList>
+            </div>
           </div>
+          <Order books={cartItemsArray} totalMoney={totalMoney} />
         </div>
-      </div>
+      )}
     </div>
   );
 }

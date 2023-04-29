@@ -1,17 +1,15 @@
 import React, { useState, useRef } from "react";
-import axios from "axios";
-
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
-
 import styles from "./Order.module.css";
+import { CHECKOUT_ACTION } from "../redux/actions/checkoutAction";
 
 function Order(props) {
   const toast = useRef(null);
+  const dispatch = useDispatch();
+  let checkoutData = useSelector((state) => state.checkout.checkoutData);
 
-  let totalMoney = useSelector((state) => state.orderBooks.totalMoney);
   const [isOrderSubmit, setIsOrderSubmit] = useState(false);
 
   const showSuccess = () => {
@@ -19,7 +17,7 @@ function Order(props) {
       severity: "success",
       summary: "Successful!",
       detail: "Your order is submitted",
-      life: 2500,
+      life: 2500
     });
   };
 
@@ -28,7 +26,7 @@ function Order(props) {
       severity: "error",
       summary: "Oops!!!",
       detail: "Submission fails",
-      life: 2500,
+      life: 2500
     });
   };
 
@@ -37,28 +35,13 @@ function Order(props) {
       severity: "warn",
       summary: "Oops!!!",
       detail: "You have not signed in yet",
-      life: 2500,
+      life: 2500
     });
   };
 
   async function sendOrder() {
-    const userID = window.localStorage.getItem("bnUserID");
-    const token = window.localStorage.getItem("bnToken");
-    const orderBooks = props.books;
-    let response = await axios({
-      method: "post",
-      url: "/order",
-      data: {
-        id: userID,
-        orderBooks: orderBooks,
-        totalMoney: totalMoney,
-      },
-      headers: {
-        Authorization: `JWT ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    if (response.data.orderStatus === "success") {
+    dispatch(CHECKOUT_ACTION());
+    if (checkoutData) {
       setIsOrderSubmit(true);
       showSuccess();
     } else {
@@ -69,11 +52,11 @@ function Order(props) {
   function handleOrderClick() {
     const userID = window.localStorage.getItem("bnUserID");
     const token = window.localStorage.getItem("bnToken");
-    
+
     if (userID && token) {
-        sendOrder();
+      sendOrder();
     } else {
-        showSignInRequire();
+      showSignInRequire();
     }
   }
 
@@ -82,7 +65,9 @@ function Order(props) {
       <Toast ref={toast} position="bottom-right" />
       <div className={styles.orderTotal}>
         Total:{" "}
-        <span className={styles.orderPrice}>${totalMoney.toFixed(2)}</span>
+        <span className={styles.orderPrice}>
+          ${props.totalMoney.toFixed(2)}
+        </span>
       </div>
       <Button label="Send Order" icon="pi pi-send" onClick={handleOrderClick} />
     </div>
