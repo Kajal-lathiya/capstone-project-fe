@@ -1,8 +1,6 @@
 const BASE_URL = "http://localhost:3001";
-const currentUserID = window.localStorage.getItem("bnUserID");
 
-export function CHECKOUT_ACTION() {
-  console.log("cart calling");
+export function CHECKOUT_ACTION(totalmonay, token) {
   return function (dispatch, getState) {
     return new Promise(async (resolve, rejects) => {
       try {
@@ -10,25 +8,15 @@ export function CHECKOUT_ACTION() {
           type: "CHECKOUT_ORDER",
           subtype: "loading"
         });
-        let myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        let raw = JSON.stringify({
-          product: {
-            name: "iPhone 12",
-            image:
-              "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-12-purple-select-2021?wid=470&hei=556&fmt=jpeg&qlt=95&.v=1617130317000",
-            amount: 100,
-            quantity: 1
-          }
-        });
+        let userID = localStorage.getItem("CURRENT_USER");
+
         let requestOptions = {
           method: "POST",
-          headers: myHeaders,
-          body: raw,
-          redirect: "follow"
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount: totalmonay, token, userID })
         };
 
-        fetch(`${BASE_URL}/payment`, requestOptions)
+        fetch(`${BASE_URL}/checkout`, requestOptions)
           .then((response) => response.json())
           .then((result) => {
             dispatch({

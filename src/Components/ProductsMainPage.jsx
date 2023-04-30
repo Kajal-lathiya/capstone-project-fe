@@ -13,14 +13,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 const ProductsPage = () => {
   const dispatch = useDispatch();
+
   const productArray = useSelector((state) => state.admin.productsData);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryFromURL = searchParams.get("category");
-  const [allProducts, setAllProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(categoryFromURL);
-
-  const products = allProducts.filter((product) => product.adopted !== true);
+  const [selectedCatProducts, setSelectedCatProducts] = useState([]);
 
   useEffect(() => {
     dispatch(GET_PRODUCTS_ACTION());
@@ -32,6 +31,10 @@ const ProductsPage = () => {
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
+    const products = productArray.filter(
+      (product) => product.category === category
+    );
+    setSelectedCatProducts(products);
     setSearchParams({ category });
   };
 
@@ -57,9 +60,13 @@ const ProductsPage = () => {
               justifyContent: "center"
             }}
           >
-            {productArray.map((product) => (
-              <ProductCard key={product._id} product={product} />
-            ))}
+            {selectedCatProducts.length !== 0
+              ? selectedCatProducts.map((product) => (
+                  <ProductCard key={product._id} product={product} />
+                ))
+              : productArray.map((product) => (
+                  <ProductCard key={product._id} product={product} />
+                ))}
           </Grid>
         </Box>
       </Box>

@@ -40,10 +40,8 @@ const RegisterPage = () => {
       password: password,
       role: role
     };
-    console.log(name, email, surname, password);
     dispatch(SIGNUP_ACTION(user))
       .then((response) => {
-        console.log("response", response);
         dispatch(GET_PROFILE_ACTION());
 
         navigate("/");

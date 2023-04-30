@@ -21,8 +21,8 @@ const categoriesListStyles = {
   "&:hover": {
     opacity: "100%",
     border: "black",
-    textDecoration: "bold",
-  },
+    textDecoration: "bold"
+  }
 };
 
 const categories = [
@@ -31,7 +31,7 @@ const categories = [
   { name: "Clothing", image: house, color: "#fbae42" },
   { name: "Health and beauty", image: beauty, color: "#5f9f06" },
   { name: "Toys", image: toy, color: "#fc665b" },
-  { name: "Other", image: plant, color: "#afafaf" },
+  { name: "Other", image: plant, color: "#afafaf" }
 ];
 
 const CategoriesContainer = ({ onItemClick }) => {
@@ -53,7 +53,7 @@ const CategoriesContainer = ({ onItemClick }) => {
               sx={{
                 display: "flex",
                 flexWrap: "wrap",
-                justifyContent: "center",
+                justifyContent: "center"
               }}
             >
               <Box

@@ -1,17 +1,16 @@
 import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import styles from "./Order.module.css";
 import { CHECKOUT_ACTION } from "../redux/actions/checkoutAction";
+import StripeCheckout from "react-stripe-checkout";
+import { useNavigate, Link } from "react-router-dom";
 
 function Order(props) {
   const toast = useRef(null);
   const dispatch = useDispatch();
-  let checkoutData = useSelector((state) => state.checkout.checkoutData);
-
-  const [isOrderSubmit, setIsOrderSubmit] = useState(false);
-
+  const navigate = useNavigate();
+  const totalAmount = JSON.stringify(props.totalMoney).replace(".", "");
   const showSuccess = () => {
     toast.current.show({
       severity: "success",
@@ -19,6 +18,24 @@ function Order(props) {
       detail: "Your order is submitted",
       life: 2500
     });
+  };
+  const handleToken = async (token) => {
+    let userId = localStorage.getItem("CURRENT_USER");
+    let userToken = localStorage.getItem("USER_TOKEN");
+    if (userId && userToken) {
+      dispatch(CHECKOUT_ACTION(totalAmount, token))
+        .then((response) => {
+          console.log("response,", response);
+          showSuccess();
+          navigate("/SuccessPlaceOrder");
+        })
+        .catch((e) => {
+          console.log(e);
+          showFail();
+        });
+    } else {
+      showSignInRequire();
+    }
   };
 
   const showFail = () => {
@@ -38,28 +55,6 @@ function Order(props) {
       life: 2500
     });
   };
-
-  async function sendOrder() {
-    dispatch(CHECKOUT_ACTION());
-    if (checkoutData) {
-      setIsOrderSubmit(true);
-      showSuccess();
-    } else {
-      showFail();
-    }
-  }
-
-  function handleOrderClick() {
-    const userID = window.localStorage.getItem("bnUserID");
-    const token = window.localStorage.getItem("bnToken");
-
-    if (userID && token) {
-      sendOrder();
-    } else {
-      showSignInRequire();
-    }
-  }
-
   return (
     <div className={styles.orderContainer}>
       <Toast ref={toast} position="bottom-right" />
@@ -69,7 +64,11 @@ function Order(props) {
           ${props.totalMoney.toFixed(2)}
         </span>
       </div>
-      <Button label="Send Order" icon="pi pi-send" onClick={handleOrderClick} />
+      <StripeCheckout
+        amount={totalAmount}
+        token={handleToken}
+        stripeKey="pk_test_51Mt7AULbhRb2c4Mq69nlSRULU5GIEngUTUe88rq55TVJvPCXUvMmX4tYqkvMnEFaK6GH40Hnh2OEumG1qXFpq4va00bDElf4HJ"
+      />
     </div>
   );
 }

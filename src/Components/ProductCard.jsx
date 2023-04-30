@@ -10,13 +10,27 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Link } from "react-router-dom";
 import { Grid } from "@mui/material";
+import { Button } from "primereact/button";
+import { GET_PRODUCTS_ACTION } from "../redux/actions/adminAction";
+import { ADDTOCART_ACTION } from "../redux/actions/cartAction";
+import { CARTITEMS_ACTION } from "../redux/actions/cartAction";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const ProductCard = (props) => {
   const { product } = props;
-
+  const dispatch = useDispatch();
   const avatarLinkPath = `/users/${product._id}`;
+
+  const addBookToCart = (product) => {
+    dispatch(ADDTOCART_ACTION(product))
+      .then((response) => {
+        dispatch(GET_PRODUCTS_ACTION());
+        dispatch(CARTITEMS_ACTION());
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <Grid item sx={{ display: "flex", justifyContent: "center" }}>
       <Card sx={{ width: "357px" }}>
@@ -37,13 +51,16 @@ const ProductCard = (props) => {
           <CardMedia
             component="img"
             height="194"
-            image={product.thumbnail}
+            image={product.mainPicture}
             alt="product"
           />
         </Link>
         <CardContent>
           <Typography variant="body2" color="text.secondary">
             {product.description.slice(0, 40).concat("...")}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            $ {product.price}
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
@@ -55,6 +72,15 @@ const ProductCard = (props) => {
               <ArrowForwardIosIcon />
             </IconButton>
           </Link>
+          {!product.addtocart && (
+            <Button
+              label="Add to Cart"
+              icon="pi pi-check-circle"
+              onClick={() => {
+                addBookToCart(product);
+              }}
+            />
+          )}
         </CardActions>
       </Card>
     </Grid>

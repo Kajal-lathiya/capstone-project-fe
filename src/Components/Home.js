@@ -1,14 +1,11 @@
 import React, { useEffect } from "react";
 import styles from "./Home.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { getSearchAPI } from "../redux/actions";
-import { PRODUCT_ACTION } from "../redux/actions/productAction";
 import { GET_PROFILE_ACTION } from "../redux/actions/userAction";
 
 import "primeflex/primeflex.css";
 import { Card } from "primereact/card";
 import { Carousel } from "primereact/carousel";
-// import { Button } from "primereact/button";
 import { Link } from "react-router-dom";
 import { Tag } from "primereact/tag";
 import undraw_connection from "../assets/undraw_connection.jpg";
@@ -17,6 +14,7 @@ import undraw_admin from "../assets/undraw_admin.jpg";
 import { Button, Stack, Typography } from "@mui/material";
 import { Container, Box } from "@mui/system";
 import MyNavbar from "./MyNavbar";
+import { CARTITEMS_ACTION } from "../redux/actions/cartAction";
 
 const welcomeDivStyles = {
   display: { xs: "flex" },
@@ -30,12 +28,11 @@ const welcomeDivStyles = {
 
 function Home() {
   const dispatch = useDispatch();
-  const productArray = useSelector((state) => state.product.productData);
+  const productArray = useSelector((state) => state.admin.productsData);
   const currentUser = useSelector((state) => state.user.currentUser);
   useEffect(() => {
-    dispatch(getSearchAPI());
     dispatch(GET_PROFILE_ACTION());
-    dispatch(PRODUCT_ACTION());
+    dispatch(CARTITEMS_ACTION());
   }, []);
   const welcomeHeader =
     currentUser && currentUser.user && currentUser.user.role === "user" ? (
@@ -58,7 +55,7 @@ function Home() {
             alignItems: "center"
           }}
         >
-          <Link to="/product/add">
+          <Link to="/products">
             <Button
               // color="warning"
               // variant="outlined"
@@ -82,7 +79,7 @@ function Home() {
           </Link>
         </Box>
       </>
-    ) : currentUser.user && currentUser.user.role === "admin" ? (
+    ) : currentUser && currentUser.user && currentUser.user.role === "admin" ? (
       <>
         <Typography
           variant="h4"
@@ -135,13 +132,6 @@ function Home() {
           <br></br>
           Welcome to onlineMarketplace!!
         </Typography>
-        {/* <Typography variant="body2" sx={{ textDecoration: "justify" }}>
-        Swapp is a mobile application that aims to promote sustainability and
-        community building by allowing users to swap products in various
-        categories while also providing a platform for social interaction and
-        engagement.
-      </Typography> */}
-
         <Box
           sx={{
             display: "flex",
@@ -151,8 +141,6 @@ function Home() {
         >
           <Link to="/register">
             <Button
-              // color="warning"
-              // variant="outlined"
               sx={{
                 color: "white",
                 textDecoration: "none",
@@ -213,7 +201,7 @@ function Home() {
       <div className="border-1 surface-border border-round shadow-2 m-2 text-center py-5 px-3">
         <div className="mb-3">
           <img
-            src={product.thumbnail}
+            src={product.mainPicture}
             alt={product.name}
             className={`w-6 shadow-2 ${styles.imageSize}`}
           />
@@ -252,61 +240,61 @@ function Home() {
         {" "}
         <Box p={"1rem"}>{welcomeHeader}</Box>
         <Box>
-          {currentUser && currentUser.user && currentUser.user.role === "user" ? (
-            <img className="mainGraphic" alt="" src={undraw_connection} />
-          ) : (
+          {currentUser &&
+          currentUser.user &&
+          currentUser.user.role === "admin" ? (
             <img className="mainGraphic" alt="" src={undraw_admin} />
+          ) : (
+            <img className="mainGraphic" alt="" src={undraw_connection} />
           )}
         </Box>
       </Container>
-      {currentUser && currentUser.user && currentUser.user.role === "user" && (
-        <>
-          <div className="card m-4">
-            <div className="card mt-4">
-              <Carousel
-                value={productArray}
-                numVisible={3}
-                numScroll={3}
-                responsiveOptions={responsiveOptions}
-                itemTemplate={productTemplate}
-              />
+      <>
+        <div className="card m-4">
+          <div className="card mt-4">
+            <Carousel
+              value={productArray}
+              numVisible={3}
+              numScroll={3}
+              responsiveOptions={responsiveOptions}
+              itemTemplate={productTemplate}
+            />
+          </div>
+        </div>
+        <footer>
+          <div className={styles.footerContainer}>
+            <div className={styles.footerColumn}>
+              <h3>About Us</h3>
+              <p>
+                We are a team of passionate developers who love building awesome
+                products.
+              </p>
+            </div>
+            <div className={styles.footerColumn}>
+              <h3>Contact Us</h3>
+              <ul>
+                <li>Email: kajalbodarya77@gmail.com</li>
+                <li>Phone: +1 555-555-5555</li>
+                <li>Address: 123 Main St, London UK</li>
+              </ul>
+            </div>
+            <div className={styles.footerColumn}>
+              <h3>Follow Us</h3>
+              <ul>
+                <li>
+                  <a href="#">Facebook</a>
+                </li>
+                <li>
+                  <a href="#">Twitter</a>
+                </li>
+                <li>
+                  <a href="#">Instagram</a>
+                </li>
+              </ul>
             </div>
           </div>
-          <footer>
-            <div className={styles.footerContainer}>
-              <div className={styles.footerColumn}>
-                <h3>About Us</h3>
-                <p>
-                  We are a team of passionate developers who love building
-                  awesome products.
-                </p>
-              </div>
-              <div className={styles.footerColumn}>
-                <h3>Contact Us</h3>
-                <ul>
-                  <li>Email: kajalbodarya77@gmail.com</li>
-                  <li>Phone: +1 555-555-5555</li>
-                  <li>Address: 123 Main St, London UK</li>
-                </ul>
-              </div>
-              <div className={styles.footerColumn}>
-                <h3>Follow Us</h3>
-                <ul>
-                  <li>
-                    <a href="#">Facebook</a>
-                  </li>
-                  <li>
-                    <a href="#">Twitter</a>
-                  </li>
-                  <li>
-                    <a href="#">Instagram</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </footer>{" "}
-        </>
-      )}
+        </footer>{" "}
+      </>
     </div>
   );
 }

@@ -22,18 +22,18 @@ export default function admin(state = initialState, action = {}) {
           action.subtype === "success" ? action.productsData : state.productsData
       };
     }
-    // case "PRODUCT_DETAILS": {
-    //   return {
-    //     ...state,
-    //     productDetailsError: action.error ? action.error : null,
-    //     productDetailsSuccess: action.subtype === "success",
-    //     productDetailsLoading: action.subtype === "loading",
-    //     productDetails:
-    //       action.subtype === "success"
-    //         ? action.productDetails
-    //         : state.productDetails
-    //   };
-    // }
+    case "GET_PRODUCT_DETAILS": {
+      return {
+        ...state,
+        productDetailsError: action.error ? action.error : null,
+        productDetailsSuccess: action.subtype === "success",
+        productDetailsLoading: action.subtype === "loading",
+        productDetails:
+          action.subtype === "success"
+            ? action.productDetails
+            : state.productDetails
+      };
+    }
 
     default:
       return state;

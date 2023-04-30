@@ -8,7 +8,6 @@ import { GET_PROFILE_ACTION } from "../redux/actions/userAction";
 
 // import { productActions } from "../redux/reducers/products/productsSlice";
 import {
-  Badge,
   MenuItem,
   Tooltip,
   Button,
@@ -23,6 +22,8 @@ import {
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import classes from "./MyNavbar.module.css";
+import { Badge } from "primereact/badge";
+import { CARTITEMS_ACTION } from "../redux/actions/cartAction";
 
 // import { messagesActions } from "../redux/reducers/messages/messagesSlice";
 
@@ -35,8 +36,7 @@ const navItemStyle = {
 
 function MyNavbar() {
   const currentUser = useSelector((state) => state.user.currentUser);
-  // const cartCount = useSelector((state) => state.cart.cartData.length);
-  const cartCount = 2;
+  const cartData = useSelector((state) => state.cart.cartData.cartItems);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const dispatch = useDispatch();
@@ -44,6 +44,9 @@ function MyNavbar() {
   const handleOpenMessages = () => {
     // dispatch(messagesActions.openMessageList());
   };
+  React.useEffect(() => {
+    dispatch(CARTITEMS_ACTION());
+  }, []);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -61,19 +64,17 @@ function MyNavbar() {
   };
 
   const handleLogout = () => {
-    console.log("handleLogout");
     let clear = localStorage.clear();
     let userToken = localStorage.getItem("USER_TOKEN");
     let userId = localStorage.getItem("CURRENT_USER");
     dispatch(GET_PROFILE_ACTION());
-    console.log("clear-->", userToken, userId);
     navigate("/login");
   };
 
   const navigateCart = () => {
-    // if (cartCount > 0) {
-    //   navigate("/cart");
-    // }
+    if (cartData && cartData.length !== 0) {
+      navigate("/cart");
+    }
   };
   return (
     <AppBar
@@ -265,20 +266,18 @@ function MyNavbar() {
 
           <Box sx={{ flexGrow: 0 }}>
             {currentUser && currentUser.user ? (
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <div onClick={navigateCart}>
+              <Box sx={{ display: "flex", justifyContent: "space-between", }}>
+                <div onClick={navigateCart} >
                   <i
                     className={`pi pi-shopping-cart p-overlay-badge ${classes.cartIcon}`}
                     style={{ fontSize: "2rem" }}
                   >
-                    {/* {cartCount > 0 ? ( */}
-                    <Badge
-                      value={cartCount}
-                      className={classes.badgeContent}
-                    ></Badge>
-                    {/* ) : (
-                      ""
-                    )} */}
+                    {cartData && cartData.length !== 0 ? (
+                      <Badge
+                        value={cartData.length}
+                        className={classes.badgeContent}
+                      ></Badge>
+                    ) : null}
                   </i>
                 </div>
                 <Tooltip title="Open settings">

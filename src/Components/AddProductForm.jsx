@@ -33,6 +33,8 @@ const conditions = ["Used", "Slightly Used", "New"];
 const AddProductForm = () => {
   const [productName, setProductName] = useState("");
   const [productDescription, setDescription] = useState("");
+  // const [productImg, setProductImg] = useState({});
+  const [file, setFile] = useState(null);
   const [category, setCategory] = useState("");
   const [condition, setCondition] = useState("");
   const [price, setPrice] = useState("");
@@ -54,48 +56,37 @@ const AddProductForm = () => {
     setDescription("");
     setCategory("");
     setCondition("");
-    // dispatch(productActions.removeProductImage());
+    setPrice("");
+    setFile(null);
     handleClick();
   };
 
-  const handleSubmit = (event, userId) => {
-    event.preventDefault();
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
 
+  const handleSubmit = async (event, userId) => {
+    event.preventDefault();
     const product = {
       name: productName,
       description: productDescription,
+      price: price,
       category: category,
       condition: condition,
-      mainPicture: "https://i.dummyjson.com/data/products/1/thumbnail.jpg",
-      owner: userId,
-      price: price
+      owner: userId
     };
-    console.log("product:", product);
-    dispatch(ADD_PRODUCT_ACTION(product))
+    await dispatch(ADD_PRODUCT_ACTION(product))
       .then((response) => {
         clearTheForm();
         console.log("response", response);
         let productId = response._id;
         if (productId) {
-          if (productImage) {
-            console.log(productImage);
-            // dispatch(
-            //   sendProductImage({ productId: productId, image: productImage })
-            // );
-            dispatch(
-              ADD_PRODUCT_IMAGE_ACTION({
-                productId: productId,
-                image: productImage
-              })
-            );
+          if (file) {
+            dispatch(ADD_PRODUCT_IMAGE_ACTION(productId, file));
           }
         }
       })
       .catch((err) => console.log(err));
-
-    // addProductAction(product).then(() => {
-    //   clearTheForm();
-    // });
   };
   const handleClick = () => {
     setOpen(true);
@@ -107,33 +98,6 @@ const AddProductForm = () => {
     }
 
     setOpen(false);
-  };
-
-  const addProductAction = async (product) => {
-    try {
-      const config = {
-        method: "POST",
-        body: JSON.stringify(product),
-        headers: new Headers({
-          "Content-Type": "application/json"
-        })
-      };
-      const response = await fetch(`${BE_URL}/products`, config);
-      if (response.ok) {
-        const data = await response.json();
-        const productId = data._id;
-        if (productId) {
-          if (productImage) {
-            console.log(productImage);
-            // dispatch(
-            //   sendProductImage({ productId: productId, image: productImage })
-            // );
-          }
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   return (
@@ -258,11 +222,7 @@ const AddProductForm = () => {
             className="file-input"
             single
             type="file"
-            onChange={(e) => {
-              const file = e.target.files[0];
-
-              // dispatch(productActions.addProductImage(file));
-            }}
+            onChange={handleFileChange}
           ></input>
           <label htmlFor="addPicture">
             <Box

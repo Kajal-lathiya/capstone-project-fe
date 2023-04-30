@@ -24,7 +24,6 @@ export function ADD_PRODUCT_ACTION(product) {
         let response = await fetch(`${BASE_URL}/products`, requestOptions);
         if (response.ok) {
           let result = await response.json();
-          console.log("result--product", result);
           dispatch({
             type: "ADD_PRODUCT",
             subtype: "success",
@@ -61,23 +60,20 @@ export function ADD_PRODUCT_IMAGE_ACTION(productId, image) {
           subtype: "loading"
         });
 
-        console.log("action image", image);
-        console.log("action id", productId);
-        const form = new FormData();
-        form.append("mainPicture", image);
+        let formdata = new FormData();
+        formdata.append("mainPicture", image);
 
-        const config = {
+        let requestOptions = {
           method: "POST",
-          body: form
+          body: formdata
         };
 
         const response = await fetch(
           `${BASE_URL}/products/${productId}/files`,
-          config
+          requestOptions
         );
         if (response.ok) {
           let result = await response.json();
-          console.log("result--product", result);
           dispatch({
             type: "ADD_PRODUCTIMAGE",
             subtype: "success",
@@ -127,7 +123,6 @@ export function GET_PRODUCTS_ACTION() {
         let response = await fetch(`${BASE_URL}/products`, requestOptions);
         if (response.ok) {
           let result = await response.json();
-          console.log("result--product", result);
           dispatch({
             type: "GET_PRODUCTS",
             subtype: "success",
@@ -148,6 +143,45 @@ export function GET_PRODUCTS_ACTION() {
         rejects(e);
         dispatch({
           type: "GET_PRODUCTS",
+          error: e
+        });
+      }
+    });
+  };
+}
+
+export function GET_PRODUCT_DETAILS_ACTION(productId) {
+  return function (dispatch, getState) {
+    return new Promise(async (resolve, rejects) => {
+      try {
+        dispatch({
+          type: "GET_PRODUCT_DETAILS",
+          subtype: "loading"
+        });
+
+        let response = await fetch(`${BASE_URL}/products/${productId}`);
+        if (response.ok) {
+          let result = await response.json();
+          dispatch({
+            type: "GET_PRODUCT_DETAILS",
+            subtype: "success",
+            productDetails: result
+          });
+          resolve(result);
+        } else {
+          dispatch({
+            type: "GET_PRODUCT_DETAILS",
+            subtype: "loading"
+          });
+          dispatch({
+            type: "GET_PRODUCT_DETAILS",
+            error: false
+          });
+        }
+      } catch (e) {
+        rejects(e);
+        dispatch({
+          type: "GET_PRODUCT_DETAILS",
           error: e
         });
       }

@@ -6,14 +6,17 @@ import { InputText } from "primereact/inputtext";
 import styles from "./CartItem.module.css";
 import {
   REMOVE_CARTITEM_ACTION,
-  UPDATE_QUNTITY_ACTION
+  UPDATE_QUNTITY_ACTION,
+  CARTITEMS_ACTION
 } from "../redux/actions/cartAction";
+
+import { GET_PRODUCT_DETAILS_ACTION } from "../redux/actions/adminAction";
 
 function CartItem(props) {
   const dispatch = useDispatch();
 
   const [quantity, setQuantity] = useState(props.orderQuantity);
-  const currentUserID = window.localStorage.getItem("bnUserID");
+  const currentUserID = localStorage.getItem("CURRENT_USER");
 
   const updateQuntity = (qty) => {
     if (qty >= 1) {
@@ -25,9 +28,14 @@ function CartItem(props) {
       dispatch(UPDATE_QUNTITY_ACTION(item));
     }
   };
-  
-  const removeBookFromCart = () => {
-    dispatch(REMOVE_CARTITEM_ACTION(props.cartItemID));
+
+  const removeItemFromCart = () => {
+    dispatch(REMOVE_CARTITEM_ACTION(props.cartItemID))
+      .then((response) => {
+        dispatch(CARTITEMS_ACTION());
+        dispatch(GET_PRODUCT_DETAILS_ACTION());
+      })
+      .catch((e) => console.log(e));
   };
 
   return (
@@ -40,7 +48,7 @@ function CartItem(props) {
             alt={props.title}
           />
           <div className="flex-1 flex flex-column gap-2 xl:mr-8">
-            <span className="font-bold">{props.author}</span>
+            <span className="font-bold">{props.category}</span>
             <div className="flex align-items-center gap-2">
               <i className="pi pi-tag text-sm"></i>
               <span>{props.title}</span>
@@ -53,9 +61,7 @@ function CartItem(props) {
                 icon="pi pi-trash"
                 className="p-button-rounded p-button-danger"
                 onClick={() => {
-                  // dispatch(removeBookFromCart());
-                  // dispatch(calcTotalMoney());
-                  removeBookFromCart();
+                  removeItemFromCart();
                 }}
               />
             ) : (
@@ -77,8 +83,6 @@ function CartItem(props) {
               className="p-button-rounded"
               onClick={() => {
                 setQuantity(quantity + 1);
-                // dispatch(increaseQuantity(book));
-                // dispatch(calcTotalMoney());
                 let qty = quantity + 1;
                 updateQuntity(qty);
               }}

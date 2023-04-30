@@ -1,12 +1,10 @@
 const BASE_URL = "http://localhost:3001";
-const currentUserID = window.localStorage.getItem("bnUserID");
+const currentUserID = localStorage.getItem("CURRENT_USER");
 
 export function CARTITEMS_ACTION() {
-  console.log("cart calling");
   return function (dispatch, getState) {
     return new Promise(async (resolve, rejects) => {
       try {
-        // let userToken = await AsyncStorage.getItem("USER_TOKEN");
         dispatch({
           type: "GET_CARTITEMS",
           subtype: "loading"
@@ -58,13 +56,11 @@ export function ADDTOCART_ACTION(product) {
           type: "ADDTO_CART",
           subtype: "loading"
         });
-        console.log("product:", product);
         let cartItem = {
           userID: currentUserID,
-          productID: product.id,
+          productID: product._id,
           quantity: 1
         };
-        console.log("cartItem;", cartItem);
 
         let myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -164,7 +160,6 @@ export function UPDATE_QUNTITY_ACTION(item) {
   };
 }
 
-
 export function REMOVE_CARTITEM_ACTION(cartItemID) {
   return function (dispatch, getState) {
     return new Promise(async (resolve, rejects) => {
@@ -175,7 +170,7 @@ export function REMOVE_CARTITEM_ACTION(cartItemID) {
         });
         let myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-    
+
         let requestOptions = {
           method: "DELETE",
           headers: myHeaders
