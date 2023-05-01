@@ -8,6 +8,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 function Order(props) {
   const toast = useRef(null);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const totalAmount = JSON.stringify(props.totalMoney).replace(".", "");
@@ -19,11 +20,15 @@ function Order(props) {
       life: 2500
     });
   };
+  console.log("products--->", props?.products);
+
   const handleToken = async (token) => {
     let userId = localStorage.getItem("CURRENT_USER");
     let userToken = localStorage.getItem("USER_TOKEN");
+    const productIds = props.products.map((product) => product.productID._id);
+    console.log("productIds--->", productIds);
     if (userId && userToken) {
-      dispatch(CHECKOUT_ACTION(totalAmount, token))
+      dispatch(CHECKOUT_ACTION(totalAmount, token, productIds))
         .then((response) => {
           console.log("response,", response);
           showSuccess();

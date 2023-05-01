@@ -1,12 +1,9 @@
 import * as React from "react";
 import MenuIcon from "@mui/icons-material/Menu";
-import { AllInclusive } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-// import { authActions } from "../redux/reducers/auth/userAuthSlice";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { GET_PROFILE_ACTION } from "../redux/actions/userAction";
 
-// import { productActions } from "../redux/reducers/products/productsSlice";
 import {
   MenuItem,
   Tooltip,
@@ -20,12 +17,9 @@ import {
   Menu,
   Container
 } from "@mui/material";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import classes from "./MyNavbar.module.css";
 import { Badge } from "primereact/badge";
 import { CARTITEMS_ACTION } from "../redux/actions/cartAction";
-
-// import { messagesActions } from "../redux/reducers/messages/messagesSlice";
 
 const navItemStyle = {
   "&:hover": {
@@ -41,9 +35,7 @@ function MyNavbar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleOpenMessages = () => {
-    // dispatch(messagesActions.openMessageList());
-  };
+ 
   React.useEffect(() => {
     dispatch(CARTITEMS_ACTION());
   }, []);
@@ -147,26 +139,15 @@ function MyNavbar() {
                   <Typography textAlign="center">Products</Typography>
                 </NavLink>
               </MenuItem>
-              {/* <MenuItem onClick={handleCloseNavMenu}>
-                <NavLink
-                  to="/community"
-                  className={({ isActive }) =>
-                    isActive ? classes.active : undefined
-                  }
-                >
-                  {" "}
-                  <Typography textAlign="center">Community</Typography>
-                </NavLink>
-              </MenuItem> */}
               <MenuItem onClick={handleCloseNavMenu}>
                 <NavLink
-                  to="/Contact"
+                  to="/aboutus"
                   className={({ isActive }) =>
                     isActive ? classes.active : undefined
                   }
                 >
                   {" "}
-                  <Typography textAlign="center">Contact</Typography>
+                  <Typography textAlign="center">About US</Typography>
                 </NavLink>
               </MenuItem>
               <MenuItem onClick={handleCloseNavMenu}>
@@ -214,22 +195,6 @@ function MyNavbar() {
                 <Typography textAlign="center">Products</Typography>
               </NavLink>
             </MenuItem>
-            {/* <MenuItem
-              onClick={handleCloseNavMenu}
-              disableRipple={true}
-              disableTouchRipple={true}
-              sx={navItemStyle}
-            >
-              <NavLink
-                to="/community"
-                className={({ isActive }) =>
-                  isActive ? classes.active : undefined
-                }
-              >
-                {" "}
-                <Typography textAlign="center">Community</Typography>
-              </NavLink>
-            </MenuItem> */}
             <MenuItem
               onClick={handleCloseNavMenu}
               disableRipple={true}
@@ -237,13 +202,13 @@ function MyNavbar() {
               sx={navItemStyle}
             >
               <NavLink
-                to="/Contact"
+                to="/aboutus"
                 className={({ isActive }) =>
                   isActive ? classes.active : undefined
                 }
               >
                 {" "}
-                <Typography textAlign="center">Contact</Typography>
+                <Typography textAlign="center">About US</Typography>
               </NavLink>
             </MenuItem>
             <MenuItem
@@ -323,18 +288,13 @@ function MyNavbar() {
               onClose={handleCloseUserMenu}
             >
               <MenuItem onClick={handleCloseUserMenu}>
-                <Link to="/user">
-                  <Typography textAlign="center">My profile</Typography>
-                </Link>
-              </MenuItem>
-              <MenuItem component="div" onClick={handleCloseUserMenu}>
-                <Link to="/user_edit">
-                  <Typography textAlign="center">Profile settings</Typography>
+                <Link to="/profile">
+                  <Typography textAlign="center" fontWeight={'bold'}>My profile</Typography>
                 </Link>
               </MenuItem>
               <MenuItem onClick={handleCloseUserMenu}>
                 <Link to="/">
-                  <Typography onClick={handleLogout} textAlign="center">
+                  <Typography onClick={handleLogout} textAlign="center" color='red' fontWeight={'bold'}>
                     Logout
                   </Typography>
                 </Link>

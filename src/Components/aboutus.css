@@ -1,0 +1,30 @@
+.about-us-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 50px;
+}
+
+.about-us-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.about-us-content {
+    max-width: 800px;
+    text-align: center;
+}
+
+.about-us-content h2 {
+    font-size: 24px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.about-us-content p {
+    font-size: 18px;
+    line-height: 1.5;
+    margin-bottom: 50px;
+}

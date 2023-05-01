@@ -11,14 +11,11 @@ import MyNavbar from "./MyNavbar";
 
 function Cart() {
   const dispatch = useDispatch();
-  const loader = useSelector((state) => state.cart.cartItemsLoading);
   const cartItemsArray = useSelector((state) => state.cart.cartData.cartItems);
   const totalMoney = useSelector((state) => state.cart.cartData.totalMoney);
-
   useEffect(() => {
     dispatch(CARTITEMS_ACTION());
   }, []);
-console.log('totalMoney--->', totalMoney);
   const itemTemplate = (item) => {
     return (
       <CartItem
@@ -38,7 +35,7 @@ console.log('totalMoney--->', totalMoney);
     <>
       <MyNavbar />
       <div className={styles.outerContainer}>
-        {!loader && (
+        {cartItemsArray && cartItemsArray.length !== 0 ? (
           <div className={styles.innerContainer}>
             <div>
               <h1>Cart Information</h1>
@@ -52,6 +49,10 @@ console.log('totalMoney--->', totalMoney);
               </div>
             </div>
             <Order products={cartItemsArray} totalMoney={totalMoney} />
+          </div>
+        ) : (
+          <div className={styles.dataNotFound}>
+            <h4>Data not found</h4>
           </div>
         )}
       </div>

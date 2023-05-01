@@ -34,7 +34,18 @@ export default function user(state = initialState, action = {}) {
             : state.currentUser
       };
     }
-
+    case "UPDATE_PROFILE": {
+      return {
+        ...state,
+        updateProfileError: action.error ? action.error : null,
+        updateProfileSuccess: action.subtype === "success",
+        updateProfileLoading: action.subtype === "loading",
+        updateProfile:
+          action.subtype === "success"
+            ? action.updateProfile
+            : state.updateProfile
+      };
+    }
     default:
       return state;
   }

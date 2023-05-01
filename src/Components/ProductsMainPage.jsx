@@ -8,18 +8,25 @@ import ProductCard from "./ProductCard";
 import SearchBar from "./SearchBar";
 import CategoriesContainer from "./CategoriesContainer";
 import Breadcrumbs from "./Breadcrumbs";
-import { GET_PRODUCTS_ACTION } from "../redux/actions/adminAction";
+import {
+  GET_PRODUCTS_ACTION,
+  CATEGORY_WISE_PRODUCTS_ACTION
+} from "../redux/actions/adminAction";
 import { useDispatch, useSelector } from "react-redux";
 
 const ProductsPage = () => {
   const dispatch = useDispatch();
 
   const productArray = useSelector((state) => state.admin.productsData);
+  const catwiseProductArray = useSelector(
+    (state) => state.admin.catwiseProducts
+  );
 
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryFromURL = searchParams.get("category");
   const [selectedCategory, setSelectedCategory] = useState(categoryFromURL);
-  const [selectedCatProducts, setSelectedCatProducts] = useState([]);
+  const [catWiseProduct, setCatWiseProduct] = useState(false);
+  const [categoryName, setCategoryName] = useState("");
 
   useEffect(() => {
     dispatch(GET_PRODUCTS_ACTION());
@@ -30,12 +37,9 @@ const ProductsPage = () => {
   }, [categoryFromURL]);
 
   const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
-    const products = productArray.filter(
-      (product) => product.category === category
-    );
-    setSelectedCatProducts(products);
-    setSearchParams({ category });
+    setCategoryName(category);
+    dispatch(CATEGORY_WISE_PRODUCTS_ACTION(category));
+    setCatWiseProduct(true);
   };
 
   return (
@@ -60,9 +64,13 @@ const ProductsPage = () => {
               justifyContent: "center"
             }}
           >
-            {selectedCatProducts.length !== 0
-              ? selectedCatProducts.map((product) => (
-                  <ProductCard key={product._id} product={product} />
+            {catWiseProduct === true
+              ? catwiseProductArray.map((product) => (
+                  <ProductCard
+                    key={product._id}
+                    product={product}
+                    categoryName={categoryName}
+                  />
                 ))
               : productArray.map((product) => (
                   <ProductCard key={product._id} product={product} />

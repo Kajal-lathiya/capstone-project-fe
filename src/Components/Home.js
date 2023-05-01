@@ -4,17 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { GET_PROFILE_ACTION } from "../redux/actions/userAction";
 
 import "primeflex/primeflex.css";
-import { Card } from "primereact/card";
 import { Carousel } from "primereact/carousel";
 import { Link } from "react-router-dom";
 import { Tag } from "primereact/tag";
 import undraw_connection from "../assets/undraw_connection.jpg";
 import undraw_admin from "../assets/undraw_admin.jpg";
-
-import { Button, Stack, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { Container, Box } from "@mui/system";
 import MyNavbar from "./MyNavbar";
 import { CARTITEMS_ACTION } from "../redux/actions/cartAction";
+import { GET_PRODUCTS_ACTION } from "../redux/actions/adminAction";
 
 const welcomeDivStyles = {
   display: { xs: "flex" },
@@ -33,6 +32,7 @@ function Home() {
   useEffect(() => {
     dispatch(GET_PROFILE_ACTION());
     dispatch(CARTITEMS_ACTION());
+    dispatch(GET_PRODUCTS_ACTION());
   }, []);
   const welcomeHeader =
     currentUser && currentUser.user && currentUser.user.role === "user" ? (
@@ -57,8 +57,6 @@ function Home() {
         >
           <Link to="/products">
             <Button
-              // color="warning"
-              // variant="outlined"
               sx={{
                 color: "white",
                 textDecoration: "none",
@@ -208,6 +206,8 @@ function Home() {
         </div>
         <div>
           <h4 className="mb-1">{product.name}</h4>
+          <p className="mb-1">{product.category}</p>
+          <p className="mb-1">{product.condition}</p>
           <h6 className="mt-0 mb-3">${product.price}</h6>
           <Tag
             value={product.inventoryStatus}

@@ -12,21 +12,29 @@ import { Link } from "react-router-dom";
 import { Grid } from "@mui/material";
 import { Button } from "primereact/button";
 import { GET_PRODUCTS_ACTION } from "../redux/actions/adminAction";
-import { ADDTOCART_ACTION } from "../redux/actions/cartAction";
-import { CARTITEMS_ACTION } from "../redux/actions/cartAction";
+import {
+  ADDTOCART_ACTION,
+  CARTITEMS_ACTION
+} from "../redux/actions/cartAction";
+import { CATEGORY_WISE_PRODUCTS_ACTION } from "../redux/actions/adminAction";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const ProductCard = (props) => {
   const { product } = props;
   const dispatch = useDispatch();
   const avatarLinkPath = `/users/${product._id}`;
 
-  const addBookToCart = (product) => {
-    dispatch(ADDTOCART_ACTION(product))
+  const addItemToCart = async (product) => {
+    await dispatch(ADDTOCART_ACTION(product))
       .then((response) => {
-        dispatch(GET_PRODUCTS_ACTION());
+        console.log("response--->", response);
         dispatch(CARTITEMS_ACTION());
+        if (props?.categoryName) {
+          dispatch(CATEGORY_WISE_PRODUCTS_ACTION(props?.categoryName));
+        } else {
+          dispatch(GET_PRODUCTS_ACTION());
+        }
       })
       .catch((err) => console.log(err));
   };
@@ -57,27 +65,27 @@ const ProductCard = (props) => {
         </Link>
         <CardContent>
           <Typography variant="body2" color="text.secondary">
-            {product.description.slice(0, 40).concat("...")}
+            {product?.description?.slice(0, 40).concat("...")}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            $ {product.price}
+            $ {product?.price}
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
             <FavoriteBorderIcon />
           </IconButton>
-          <Link to={`/products/${product._id}`}>
+          <Link to={`/products/${product?._id}`}>
             <IconButton aria-label="share">
               <ArrowForwardIosIcon />
             </IconButton>
           </Link>
-          {!product.addtocart && (
+          {!product?.addtocart && (
             <Button
               label="Add to Cart"
               icon="pi pi-check-circle"
               onClick={() => {
-                addBookToCart(product);
+                addItemToCart(product);
               }}
             />
           )}

@@ -175,29 +175,28 @@ export function REMOVE_CARTITEM_ACTION(cartItemID) {
           method: "DELETE",
           headers: myHeaders
         };
-        fetch(`${BASE_URL}/cart/${cartItemID}`, requestOptions)
-          .then((response) => response.json())
-          .then((result) => {
-            console.log(result);
-            dispatch({
-              type: "REMOVE_CARTITEM",
-              subtype: "success",
-              deleteCartItem: result
-            });
-            resolve(result);
-          })
-          .catch((error) => {
-            console.log("error", error);
-            rejects(error);
-            dispatch({
-              type: "REMOVE_CARTITEM",
-              subtype: "loading"
-            });
-            dispatch({
-              type: "REMOVE_CARTITEM",
-              error: error
-            });
+        let response = await fetch(
+          `${BASE_URL}/cart/${cartItemID}`,
+          requestOptions
+        );
+        if (response.ok) {
+          console.log(response.ok);
+          dispatch({
+            type: "REMOVE_CARTITEM",
+            subtype: "success",
+            deleteCartItem: response.ok
           });
+          resolve(response);
+        } else {
+          dispatch({
+            type: "REMOVE_CARTITEM",
+            subtype: "loading"
+          });
+          dispatch({
+            type: "REMOVE_CARTITEM",
+            error: response.ok
+          });
+        }
       } catch (e) {
         rejects(e);
         dispatch({

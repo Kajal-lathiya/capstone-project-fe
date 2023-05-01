@@ -131,7 +131,7 @@ export function GET_PROFILE_ACTION() {
             });
             resolve(result);
           })
-            .catch((error) => {
+          .catch((error) => {
             console.log("error", error);
             dispatch({
               type: "GET_PROFILE",
@@ -147,6 +147,110 @@ export function GET_PROFILE_ACTION() {
         rejects(e);
         dispatch({
           type: "GET_PROFILE",
+          error: e
+        });
+      }
+    });
+  };
+}
+
+export function UPDATE_USERPROFILE_ACTION(user) {
+  return function (dispatch, getState) {
+    return new Promise(async (resolve, rejects) => {
+      try {
+        let userToken = localStorage.getItem("USER_TOKEN");
+        let userId = localStorage.getItem("CURRENT_USER");
+        console.log("userId ACTION:", userId);
+        let myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        let raw = JSON.stringify(user);
+
+        let requestOptions = {
+          method: "PUT",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow"
+        };
+
+        fetch(`${BASE_URL}/users/${userId}`, requestOptions)
+          .then((response) => response.json())
+          .then((result) => {
+            console.log("profile", result);
+            dispatch({
+              type: "UPDATE_PROFILE",
+              subtype: "success",
+              updateProfile: result
+            });
+            resolve(result);
+          })
+          .catch((error) => {
+            console.log("error", error);
+            dispatch({
+              type: "UPDATE_PROFILE",
+              subtype: "loading"
+            });
+            dispatch({
+              type: "UPDATE_PROFILE",
+              error: false
+            });
+            rejects(error);
+          });
+      } catch (e) {
+        rejects(e);
+        dispatch({
+          type: "UPDATE_PROFILE",
+          error: e
+        });
+      }
+    });
+  };
+}
+
+export function UPLOAD_USER_PROFILEPIC_ACTION(image) {
+  return function (dispatch, getState) {
+    return new Promise(async (resolve, rejects) => {
+      try {
+        dispatch({
+          type: "UPDATE_PROFILEPIC",
+          subtype: "loading"
+        });
+        let userId = localStorage.getItem("CURRENT_USER");
+
+        let formdata = new FormData();
+        formdata.append("avatar", image);
+
+        let requestOptions = {
+          method: "POST",
+          body: formdata
+        };
+
+        const response = await fetch(
+          `${BASE_URL}/users/${userId}/avatar`,
+          requestOptions
+        );
+        if (response.ok) {
+          let result = await response.json();
+          dispatch({
+            type: "UPDATE_PROFILEPIC",
+            subtype: "success",
+            profilePic: result
+          });
+          resolve(result);
+        } else {
+          dispatch({
+            type: "UPDATE_PROFILEPIC",
+            subtype: "loading"
+          });
+          dispatch({
+            type: "UPDATE_PROFILEPIC",
+            error: false
+          });
+        }
+      } catch (e) {
+        rejects(e);
+        dispatch({
+          type: "UPDATE_PROFILEPIC",
           error: e
         });
       }

@@ -1,6 +1,6 @@
 const BASE_URL = "http://localhost:3001";
 
-export function CHECKOUT_ACTION(totalmonay, token) {
+export function CHECKOUT_ACTION(totalmonay, token, productIds) {
   return function (dispatch, getState) {
     return new Promise(async (resolve, rejects) => {
       try {
@@ -13,7 +13,12 @@ export function CHECKOUT_ACTION(totalmonay, token) {
         let requestOptions = {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount: totalmonay, token, userID })
+          body: JSON.stringify({
+            amount: totalmonay,
+            token,
+            userID,
+            productIds
+          })
         };
 
         fetch(`${BASE_URL}/checkout`, requestOptions)

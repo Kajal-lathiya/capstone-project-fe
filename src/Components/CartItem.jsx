@@ -10,14 +10,16 @@ import {
   CARTITEMS_ACTION
 } from "../redux/actions/cartAction";
 
-import { GET_PRODUCT_DETAILS_ACTION } from "../redux/actions/adminAction";
+import {
+  GET_PRODUCT_DETAILS_ACTION,
+  GET_PRODUCTS_ACTION
+} from "../redux/actions/adminAction";
 
 function CartItem(props) {
   const dispatch = useDispatch();
 
   const [quantity, setQuantity] = useState(props.orderQuantity);
   const currentUserID = localStorage.getItem("CURRENT_USER");
-
   const updateQuntity = (qty) => {
     if (qty >= 1) {
       let item = {
@@ -29,11 +31,13 @@ function CartItem(props) {
     }
   };
 
-  const removeItemFromCart = () => {
-    dispatch(REMOVE_CARTITEM_ACTION(props.cartItemID))
+  const removeItemFromCart = async () => {
+    await dispatch(REMOVE_CARTITEM_ACTION(props?.cartItemID))
       .then((response) => {
-        dispatch(CARTITEMS_ACTION());
-        dispatch(GET_PRODUCT_DETAILS_ACTION());
+        if (response.ok) {
+          dispatch(CARTITEMS_ACTION());
+          dispatch(GET_PRODUCTS_ACTION());
+        }
       })
       .catch((e) => console.log(e));
   };

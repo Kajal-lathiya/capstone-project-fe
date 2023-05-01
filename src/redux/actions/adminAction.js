@@ -188,3 +188,90 @@ export function GET_PRODUCT_DETAILS_ACTION(productId) {
     });
   };
 }
+
+
+export function SEARCH_PRODUCTS_ACTION(name) {
+  return function (dispatch, getState) {
+    return new Promise(async (resolve, rejects) => {
+      try {
+        dispatch({
+          type: "SEARCH_PRODUCTS",
+          subtype: "loading"
+        });
+
+        let requestOptions = {
+          method: "GET",
+        };
+
+        let response = await fetch(`${BASE_URL}/products/search?name=${name}`, requestOptions);
+        if (response.ok) {
+          let result = await response.json();
+          dispatch({
+            type: "SEARCH_PRODUCTS",
+            subtype: "success",
+            searchProducts: result
+          });
+          resolve(result);
+        } else {
+          dispatch({
+            type: "SEARCH_PRODUCTS",
+            subtype: "loading"
+          });
+          dispatch({
+            type: "SEARCH_PRODUCTS",
+            error: false
+          });
+        }
+      } catch (e) {
+        rejects(e);
+        dispatch({
+          type: "SEARCH_PRODUCTS",
+          error: e
+        });
+      }
+    });
+  };
+}
+
+export function CATEGORY_WISE_PRODUCTS_ACTION(category) {
+  return function (dispatch, getState) {
+    return new Promise(async (resolve, rejects) => {
+      try {
+        dispatch({
+          type: "CATEGORY_WISE_PRODUCTS",
+          subtype: "loading"
+        });
+
+        let requestOptions = {
+          method: "GET",
+        };
+
+        let response = await fetch(`${BASE_URL}/products/search?category=${category}`, requestOptions);
+        if (response.ok) {
+          let result = await response.json();
+          dispatch({
+            type: "CATEGORY_WISE_PRODUCTS",
+            subtype: "success",
+            catwiseProducts: result
+          });
+          resolve(result);
+        } else {
+          dispatch({
+            type: "CATEGORY_WISE_PRODUCTS",
+            subtype: "loading"
+          });
+          dispatch({
+            type: "CATEGORY_WISE_PRODUCTS",
+            error: false
+          });
+        }
+      } catch (e) {
+        rejects(e);
+        dispatch({
+          type: "CATEGORY_WISE_PRODUCTS",
+          error: e
+        });
+      }
+    });
+  };
+}

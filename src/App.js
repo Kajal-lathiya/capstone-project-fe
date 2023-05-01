@@ -1,5 +1,6 @@
 import "primereact/resources/themes/fluent-light/theme.css";
 import "primereact/resources/primereact.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 import PrimeReact from "primereact/api";
