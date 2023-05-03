@@ -35,7 +35,7 @@ function MyNavbar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
- 
+
   React.useEffect(() => {
     dispatch(CARTITEMS_ACTION());
   }, []);
@@ -56,9 +56,7 @@ function MyNavbar() {
   };
 
   const handleLogout = () => {
-    let clear = localStorage.clear();
-    let userToken = localStorage.getItem("USER_TOKEN");
-    let userId = localStorage.getItem("CURRENT_USER");
+    localStorage.clear();
     dispatch(GET_PROFILE_ACTION());
     navigate("/login");
   };
@@ -231,8 +229,8 @@ function MyNavbar() {
 
           <Box sx={{ flexGrow: 0 }}>
             {currentUser && currentUser.user ? (
-              <Box sx={{ display: "flex", justifyContent: "space-between", }}>
-                <div onClick={navigateCart} >
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <div onClick={navigateCart}>
                   <i
                     className={`pi pi-shopping-cart p-overlay-badge ${classes.cartIcon}`}
                     style={{ fontSize: "2rem" }}
@@ -289,12 +287,19 @@ function MyNavbar() {
             >
               <MenuItem onClick={handleCloseUserMenu}>
                 <Link to="/profile">
-                  <Typography textAlign="center" fontWeight={'bold'}>My profile</Typography>
+                  <Typography textAlign="center" fontWeight={"bold"}>
+                    My profile
+                  </Typography>
                 </Link>
               </MenuItem>
               <MenuItem onClick={handleCloseUserMenu}>
                 <Link to="/">
-                  <Typography onClick={handleLogout} textAlign="center" color='red' fontWeight={'bold'}>
+                  <Typography
+                    onClick={handleLogout}
+                    textAlign="center"
+                    color="red"
+                    fontWeight={"bold"}
+                  >
                     Logout
                   </Typography>
                 </Link>

@@ -8,11 +8,9 @@ export function ADD_PRODUCT_ACTION(product) {
           type: "ADD_PRODUCT",
           subtype: "loading"
         });
-        let userToken = localStorage.getItem("USER_TOKEN");
 
         let myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Cookie", `accessToken=${userToken}`);
 
         let requestOptions = {
           method: "POST",
@@ -109,11 +107,9 @@ export function GET_PRODUCTS_ACTION() {
           type: "GET_PRODUCTS",
           subtype: "loading"
         });
-        let userToken = localStorage.getItem("USER_TOKEN");
 
         let myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Cookie", `accessToken=${userToken}`);
 
         let requestOptions = {
           method: "GET",

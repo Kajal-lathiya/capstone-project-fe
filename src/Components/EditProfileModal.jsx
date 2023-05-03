@@ -109,8 +109,8 @@ const EditProfileModal = ({ show, close }) => {
           style={{ width: "200px" }}
           className="ratingModalButton"
           type="submit"
-          onClick={async (event) => {
-            await editProfileInfo(event);
+          onClick={(event) => {
+            editProfileInfo(event);
             close();
           }}
         >

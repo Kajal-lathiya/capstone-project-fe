@@ -42,8 +42,8 @@ const RegisterPage = () => {
     };
     dispatch(SIGNUP_ACTION(user))
       .then((response) => {
+        console.log('response--->', response);
         dispatch(GET_PROFILE_ACTION());
-
         navigate("/");
       })
       .catch((err) => console.log(err));

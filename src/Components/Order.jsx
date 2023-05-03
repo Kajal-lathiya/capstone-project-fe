@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useRef } from "react";
+import { useDispatch } from "react-redux";
 import { Toast } from "primereact/toast";
 import styles from "./Order.module.css";
 import { CHECKOUT_ACTION } from "../redux/actions/checkoutAction";
@@ -12,6 +12,7 @@ function Order(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const totalAmount = JSON.stringify(props.totalMoney).replace(".", "");
+  console.log('totalAmount-->', totalAmount);
   const showSuccess = () => {
     toast.current.show({
       severity: "success",
@@ -20,14 +21,11 @@ function Order(props) {
       life: 2500
     });
   };
-  console.log("products--->", props?.products);
 
   const handleToken = async (token) => {
     let userId = localStorage.getItem("CURRENT_USER");
-    let userToken = localStorage.getItem("USER_TOKEN");
     const productIds = props.products.map((product) => product.productID._id);
-    console.log("productIds--->", productIds);
-    if (userId && userToken) {
+    if (userId) {
       dispatch(CHECKOUT_ACTION(totalAmount, token, productIds))
         .then((response) => {
           console.log("response,", response);

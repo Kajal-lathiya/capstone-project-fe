@@ -1,58 +1,74 @@
 .productImageBox {
-  height: 500px;
-  margin-right: 1em;
-  position: relative;
+    height: 500px;
+    margin-right: 1em;
+    position: relative;
 }
 
 .productImage {
-  height: 100%;
-  width: fit-content;
-  border: 1px #dbdbdb solid;
-  border-radius: 10px;
-  position: relative;
+    height: 100%;
+    width: fit-content;
+    border: 1px #dbdbdb solid;
+    border-radius: 10px;
+    position: relative;
 }
 
 .productImageIcon {
-  position: absolute;
+    position: absolute;
 }
+
 .productContentBox {
-  border-bottom: 1px #dbdbdb solid;
+    border-bottom: 1px #dbdbdb solid;
 }
+
 .ownerContentBox {
-  border-top: 1px #dbdbdb solid;
-  border-bottom: 1px #dbdbdb solid;
+    border-top: 1px #dbdbdb solid;
+    border-bottom: 1px #dbdbdb solid;
 }
+
 .userName p,
 a {
-  color: black;
-  text-decoration: none;
+    color: black;
+    text-decoration: none;
 }
+
 .userName p:hover,
 a:hover {
-  color: black;
-  text-decoration: underline;
+    color: black;
+    text-decoration: underline;
 }
+
 .searchInput {
-  border-radius: 20px;
+    border-radius: 20px;
 }
+
 .searchField {
-  z-index: 1;
-  position: absolute;
-  background-color: white;
-  flex-grow: 1;
-  border-radius: 4px;
+    z-index: 1;
+    position: absolute;
+    background-color: white;
+    flex-grow: 1;
+    border-radius: 4px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+input {
+    margin-right: 10px;
 }
 
 .searchProductsListItem {
-  padding: 0.75rem 1rem;
+    padding: 0.75rem 1rem;
 }
 
 .searchProductsListItem:hover {
-  background-color: #eee;
-  transition: background-color 150ms;
+    background-color: #eee;
+    transition: background-color 150ms;
 }
 
 .breadcrumbLink:hover {
-  color: #80caff;
-  transition: color 150ms;
+    color: #80caff;
+    transition: color 150ms;
 }

@@ -20,6 +20,7 @@ export function SIGNUP_ACTION(newUser) {
         fetch(`${BASE_URL}/users/register`, requestOptions)
           .then((response) => response.json())
           .then((result) => {
+            console.log('result--->', result);
             dispatch({
               type: "SIGNUP",
               subtype: "success",
@@ -105,19 +106,15 @@ export function GET_PROFILE_ACTION() {
   return function (dispatch, getState) {
     return new Promise(async (resolve, rejects) => {
       try {
-        let userToken = localStorage.getItem("USER_TOKEN");
         let userId = localStorage.getItem("CURRENT_USER");
 
         dispatch({
           type: "GET_PROFILE",
           subtype: "loading"
         });
-        let myHeaders = new Headers();
-        myHeaders.append("Cookie", `accessToken= ${userToken}`);
 
         let requestOptions = {
           method: "GET",
-          headers: myHeaders,
           redirect: "follow"
         };
         fetch(`${BASE_URL}/users/me/${userId}`, requestOptions)
@@ -158,7 +155,6 @@ export function UPDATE_USERPROFILE_ACTION(user) {
   return function (dispatch, getState) {
     return new Promise(async (resolve, rejects) => {
       try {
-        let userToken = localStorage.getItem("USER_TOKEN");
         let userId = localStorage.getItem("CURRENT_USER");
         console.log("userId ACTION:", userId);
         let myHeaders = new Headers();

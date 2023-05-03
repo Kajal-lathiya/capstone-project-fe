@@ -1,5 +1,4 @@
 const BASE_URL = "http://localhost:3001";
-const currentUserID = localStorage.getItem("CURRENT_USER");
 
 export function CARTITEMS_ACTION() {
   return function (dispatch, getState) {
@@ -9,12 +8,13 @@ export function CARTITEMS_ACTION() {
           type: "GET_CARTITEMS",
           subtype: "loading"
         });
+        let UserID = localStorage.getItem("CURRENT_USER");
 
         let requestOptions = {
           method: "GET",
           redirect: "follow"
         };
-        fetch(`http://localhost:3001/cart/${currentUserID}`, requestOptions)
+        fetch(`${BASE_URL}/cart/${UserID}`, requestOptions)
           .then((response) => response.json())
           .then((result) => {
             console.log("cartitems action", result);
@@ -56,8 +56,10 @@ export function ADDTOCART_ACTION(product) {
           type: "ADDTO_CART",
           subtype: "loading"
         });
+        let UserID = localStorage.getItem("CURRENT_USER");
+
         let cartItem = {
-          userID: currentUserID,
+          userID: UserID,
           productID: product._id,
           quantity: 1
         };
